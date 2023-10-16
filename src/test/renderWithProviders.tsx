@@ -38,6 +38,7 @@ export const renderWithProviders = (
 
     const allMockedQueries = {
       doPartyValidation: () => Promise.resolve({ valid: true, validParties: [], message: null }),
+      doSelectParty: () => Promise.resolve(null),
       fetchActiveInstances: () => Promise.resolve([]),
       fetchApplicationMetadata: () => Promise.resolve({} as unknown as IApplicationMetadata),
       fetchCurrentParty: () => Promise.resolve({}),
@@ -49,9 +50,14 @@ export const renderWithProviders = (
       fetchDataModelSchema: () => Promise.resolve({}),
       fetchParties: () => Promise.resolve({}),
       fetchRefreshJwtToken: () => Promise.resolve({}),
+      fetchCustomValidationConfig: () => Promise.resolve(null),
       fetchFormData: () => Promise.resolve({}),
       fetchOptions: () => Promise.resolve([]),
       fetchDataList: () => Promise.resolve({} as unknown as IDataList),
+      fetchPdfFormat: () => Promise.resolve({ excludedPages: [], excludedComponents: [] }),
+      fetchDynamics: () => Promise.resolve(null),
+      fetchRuleHandler: () => Promise.resolve(null),
+      fetchTextResources: () => Promise.resolve({ language: 'nb', resources: [] }),
     } as AppQueriesContext;
     const mockedQueries = { ...allMockedQueries, ...queries };
 

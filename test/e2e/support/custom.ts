@@ -463,3 +463,42 @@ Cypress.Commands.add('interceptLayoutSetsUiSettings', (uiSettings) => {
     });
   }).as('layoutSets');
 });
+
+Cypress.Commands.add('getSummary', (label) => {
+  cy.get(`[data-testid^=summary-]:has(span:contains(${label}))`);
+});
+
+Cypress.Commands.add('testPdf', (callback, returnToForm = false) => {
+  cy.log('Testing PDF');
+
+  // Make sure instantiation is completed before we get the url
+  cy.location('hash').should('contain', '#/instance/');
+
+  // Make sure we blur any selected component before reload to trigger save
+  cy.get('body').click();
+
+  // Wait for network to be idle before calling reload
+  cy.waitForNetworkIdle('*', '*', 500);
+
+  // Visit the PDF page and reload
+  cy.location('href').then((href) => {
+    cy.visit(`${href}?pdf=1`);
+  });
+  cy.reload();
+
+  // Wait for readyForPrint, after this everything should be rendered so using timeout: 0
+  cy.get('#pdfView > #readyForPrint')
+    .should('exist')
+    .then({ timeout: 0 }, () => {
+      // Run tests from callback
+      callback();
+    });
+
+  if (returnToForm) {
+    cy.location('href').then((href) => {
+      cy.visit(href.replace('?pdf=1', ''));
+    });
+    cy.get('#pdfView > #readyForPrint').should('not.exist');
+    cy.get('#readyForPrint').should('exist');
+  }
+});

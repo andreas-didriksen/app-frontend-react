@@ -4,9 +4,7 @@ import type { SagaIterator } from 'redux-saga';
 import { AttachmentActions } from 'src/features/attachments/attachmentSlice';
 import { IsLoadingActions } from 'src/features/isLoading/isLoadingSlice';
 import { FormLayoutActions } from 'src/features/layout/formLayoutSlice';
-import { PdfActions } from 'src/features/pdf/data/pdfSlice';
 import { watchStartInitialInfoTaskQueueSaga } from 'src/features/queue/infoTask/infoTaskQueueSaga';
-import { TextResourcesActions } from 'src/features/textResources/textResourcesSlice';
 import { createSagaSlice } from 'src/redux/sagaSlice';
 import type { IQueueError, IQueueState } from 'src/features/queue/index';
 import type { ActionsFromSlice, MkActionType } from 'src/redux/sagaSlice';
@@ -55,16 +53,10 @@ export const queueSlice = () => {
           state.stateless.error = error;
         },
       }),
-      startInitialAppTaskQueue: mkAction<void>({
-        *takeEvery(): SagaIterator {
-          yield put(TextResourcesActions.fetch());
-        },
-      }),
       startInitialDataTaskQueue: mkAction<void>({
         *takeEvery(): SagaIterator {
           yield put(FormLayoutActions.fetch());
           yield put(FormLayoutActions.fetchSettings());
-          yield put(PdfActions.initial());
           yield put(AttachmentActions.mapAttachments());
         },
       }),

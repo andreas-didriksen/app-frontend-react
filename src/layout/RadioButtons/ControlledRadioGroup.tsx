@@ -18,9 +18,15 @@ export type IControlledRadioGroupProps = IRadioButtonsContainerProps;
 export const ControlledRadioGroup = (props: IControlledRadioGroupProps) => {
   const { node, isValid, overrideDisplay } = props;
   const { id, layout, readOnly, textResourceBindings, required, showAsCard } = node.item;
+  const alertOnChange = 'alertOnChange' in node.item ? node.item.alertOnChange : undefined;
   const labelSettings = 'labelSettings' in node.item ? node.item.labelSettings : undefined;
   const { selected, handleChange, handleBlur, fetchingOptions, calculatedOptions } = useRadioButtons(props);
   const { lang, langAsString } = useLanguage();
+  const selectedLabel = calculatedOptions.find((option) => option.value === selected)?.label;
+  const alertText = selectedLabel
+    ? lang('form_filler.radiobutton_alert_label', [`<strong>${selectedLabel}</strong>`])
+    : lang('form_filler.radiobutton_alert');
+  const confirmChangeText = lang('form_filler.alert_confirm');
 
   const getLabelPrefixForLikert = () => {
     if (
@@ -62,17 +68,16 @@ export const ControlledRadioGroup = (props: IControlledRadioGroupProps) => {
         >
           <Radio.Group
             legend={
-              overrideDisplay?.renderLegend === false ? null : (
-                <span className={classes.label}>
-                  {labelText}
-                  {textResourceBindings?.help ? (
-                    <HelpText title={langAsString(textResourceBindings?.help)}>
-                      {lang(textResourceBindings?.help)}
-                    </HelpText>
-                  ) : null}
-                </span>
-              )
+              <span className={classes.label}>
+                {labelText}
+                {textResourceBindings?.help ? (
+                  <HelpText title={langAsString(textResourceBindings?.help)}>
+                    {lang(textResourceBindings?.help)}
+                  </HelpText>
+                ) : null}
+              </span>
             }
+            hideLegend={overrideDisplay?.renderLegend === false}
             description={lang(textResourceBindings?.description)}
             error={!isValid}
             disabled={readOnly}
@@ -93,6 +98,9 @@ export const ControlledRadioGroup = (props: IControlledRadioGroupProps) => {
                 onChange={handleChange}
                 hideLabel={hideLabel}
                 size='small'
+                alertOnChange={alertOnChange}
+                alertText={alertText as string}
+                confirmChangeText={confirmChangeText as string}
               />
             ))}
           </Radio.Group>
