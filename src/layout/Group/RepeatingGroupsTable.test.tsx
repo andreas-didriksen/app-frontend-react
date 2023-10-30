@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { act, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 import ResizeObserverModule from 'resize-observer-polyfill';
 
 import { getFormLayoutGroupMock } from 'src/__mocks__/formLayoutGroupMock';
@@ -30,6 +30,7 @@ const getLayout = (group: CompGroupRepeatingExternal, components: CompOrGroupExt
     layouts: {
       FormLayout: [group, ...components],
     },
+    layoutSetId: null,
     uiConfig: {
       hiddenFields: [],
       repeatingGroups: {
